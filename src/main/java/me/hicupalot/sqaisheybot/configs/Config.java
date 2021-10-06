@@ -1,4 +1,4 @@
-package configs;
+package me.hicupalot.sqaisheybot.configs;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -13,5 +13,5 @@ public class Config {
     public static String get(String key) {
         return dotenv.get(key.toUpperCase());
         }
-    }
+}
 

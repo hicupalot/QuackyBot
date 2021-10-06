@@ -1,6 +1,6 @@
-package BanSyncers;
+package me.hicupalot.sqaisheybot.BanSyncers;
 
-import configs.Config;
+import me.hicupalot.sqaisheybot.configs.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
