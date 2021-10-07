@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class BanSync extends ListenerAdapter {
+
     private final JDA jda;
 
     public BanSync(JDA jda) {
@@ -25,5 +26,6 @@ public class BanSync extends ListenerAdapter {
             jda.getTextChannelById(Config.QT_DISCORD_LOG).sendMessage(BannedPlayer1 + " was banned in Sqaishey's Discord so has been banned here").queue();
         }
     }
+
 }
 

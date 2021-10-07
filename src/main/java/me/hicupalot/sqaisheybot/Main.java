@@ -4,6 +4,7 @@ import me.hicupalot.sqaisheybot.BanSyncers.BanSync;
 import me.hicupalot.sqaisheybot.BanSyncers.UnBanSync;
 import me.hicupalot.sqaisheybot.command.CommandManager;
 import me.hicupalot.sqaisheybot.configs.Config;
+import me.hicupalot.sqaisheybot.data.SQLHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -17,6 +18,7 @@ public class Main {
     private static Main main;
     private final JDA jda;
     private CommandManager commandManager;
+    private SQLHandler sqlHandler;
 
     public static void main(String[] args) {
         try {
@@ -34,6 +36,7 @@ public class Main {
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .setMemberCachePolicy(MemberCachePolicy.ALL).enableCache(CacheFlag.ACTIVITY).build().awaitReady();
 
+        this.sqlHandler = new SQLHandler(Config.SQL_USERNAME, Config.SQL_PASSWORD, Config.SQL_DATABASE, Config.SQL_PORT);
         this.commandManager = new CommandManager(this);
 
         jda.addEventListener(commandManager);

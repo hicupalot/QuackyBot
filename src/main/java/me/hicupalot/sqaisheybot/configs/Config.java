@@ -8,6 +8,10 @@ public class Config {
     public static final String SQAISHEY_DISCORD_LOG="894564012824617001";
     public static final String QT_DISCORD_LOG = "736633672949825591";
     public static final String TESTING_SERVER = "325893724678782979";
+    public static final String SQL_USERNAME = "";
+    public static final String SQL_PASSWORD = "";
+    public static final String SQL_DATABASE = "";
+    public static final Integer SQL_PORT = 3306;
     //-----------------------------------------------------------------//
     private static final Dotenv dotenv = Dotenv.load();
     public static String get(String key) {
