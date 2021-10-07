@@ -1,7 +1,6 @@
 package me.hicupalot.sqaisheybot.command;
 
 import me.hicupalot.sqaisheybot.Main;
-import me.hicupalot.sqaisheybot.configs.Config;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
@@ -25,8 +24,8 @@ public class CommandManager extends ListenerAdapter {
 
         commands.add(new CommandForceSync(main));
 
-        CommandListUpdateAction quacktopiaCommandUpdateAction = main.getJda().getGuildById(Config.QUACKTOPIA).updateCommands();
-        CommandListUpdateAction sqaisheyCommandUpdateAction = main.getJda().getGuildById(Config.SQAISHEY_DISCORD).updateCommands();
+        CommandListUpdateAction quacktopiaCommandUpdateAction = main.getJda().getGuildById(main.getConfig().getQuacktopiaDiscord()).updateCommands();
+        CommandListUpdateAction sqaisheyCommandUpdateAction = main.getJda().getGuildById(main.getConfig().getSqaisheyDiscord()).updateCommands();
         for (DiscordCommand discordCommand : commands) {
             quacktopiaCommandUpdateAction.addCommands(discordCommand.buildCommand());
             sqaisheyCommandUpdateAction.addCommands(discordCommand.buildCommand());
@@ -39,7 +38,7 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
 
-        if (event.getGuild() == null || (!event.getGuild().getId().equals(Config.QUACKTOPIA) && !event.getGuild().getId().equals(Config.SQAISHEY_DISCORD))) {
+        if (event.getGuild() == null || (!event.getGuild().getId().equals(main.getConfig().getQuacktopiaDiscord()) && !event.getGuild().getId().equals(main.getConfig().getSqaisheyDiscord()))) {
             return;
         }
 

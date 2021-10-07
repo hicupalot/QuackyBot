@@ -1,21 +1,105 @@
 package me.hicupalot.sqaisheybot.configs;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
+import java.io.*;
 
 public class Config {
-    public static final String SQAISHEY_DISCORD = "894562763697963059";
-    public static final String QUACKTOPIA = "298176792492244992";
-    public static final String SQAISHEY_DISCORD_LOG="894564012824617001";
-    public static final String QT_DISCORD_LOG = "736633672949825591";
-    public static final String TESTING_SERVER = "325893724678782979";
-    public static final String SQL_USERNAME = "";
-    public static final String SQL_PASSWORD = "";
-    public static final String SQL_DATABASE = "";
-    public static final Integer SQL_PORT = 3306;
-    //-----------------------------------------------------------------//
-    private static final Dotenv dotenv = Dotenv.load();
-    public static String get(String key) {
-        return dotenv.get(key.toUpperCase());
-        }
-}
 
+    private final String token;
+    private final String sqaisheyDiscord;
+    private final String quacktopiaDiscord;
+    private final String sqaisheyDiscordLog;
+    private final String quacktopiaDiscordLog;
+    private final String sqlUsername;
+    private final String sqlPassword;
+    private final String sqlDatabase;
+    private final Integer sqlPort;
+
+    public Config(String token, String sqaisheyDiscord, String quacktopiaDiscord, String sqaisheyDiscordLog, String quacktopiaDiscordLog, String sqlUsername, String sqlPassword, String sqlDatabase, Integer sqlPort) {
+
+        this.token = token;
+        this.sqaisheyDiscord = sqaisheyDiscord;
+        this.quacktopiaDiscord = quacktopiaDiscord;
+        this.sqaisheyDiscordLog = sqaisheyDiscordLog;
+        this.quacktopiaDiscordLog = quacktopiaDiscordLog;
+        this.sqlUsername = sqlUsername;
+        this.sqlPassword = sqlPassword;
+        this.sqlDatabase = sqlDatabase;
+        this.sqlPort = sqlPort;
+
+    }
+
+    public static Config loadConfig(String name, Class<?> clazz) throws IOException {
+
+        File file = new File(name);
+        if (!file.exists()) {
+            file.createNewFile();
+            InputStream from = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+            try (InputStream input = from) {
+                try (FileOutputStream output = new FileOutputStream(file)) {
+                    byte[] b = new byte[8192];
+                    int length;
+                    while ((length = input.read(b)) > 0)
+                        output.write(b, 0, length);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        JsonReader jsonReader = new JsonReader(new FileReader(file));
+        Gson gson = new Gson();
+        return gson.fromJson(jsonReader, clazz);
+
+    }
+
+    public static void saveConfig(String name, Object object) {
+        try {
+            Gson gson = new Gson();
+            FileWriter fileWriter = new FileWriter(name);
+            gson.toJson(object, fileWriter);
+            fileWriter.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getSqaisheyDiscord() {
+        return sqaisheyDiscord;
+    }
+
+    public String getQuacktopiaDiscord() {
+        return quacktopiaDiscord;
+    }
+
+    public String getSqaisheyDiscordLog() {
+        return sqaisheyDiscordLog;
+    }
+
+    public String getQuacktopiaDiscordLog() {
+        return quacktopiaDiscordLog;
+    }
+
+    public String getSqlUsername() {
+        return sqlUsername;
+    }
+
+    public String getSqlPassword() {
+        return sqlPassword;
+    }
+
+    public String getSqlDatabase() {
+        return sqlDatabase;
+    }
+
+    public Integer getSqlPort() {
+        return sqlPort;
+    }
+
+}

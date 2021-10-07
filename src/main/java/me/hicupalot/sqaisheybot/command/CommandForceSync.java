@@ -1,15 +1,14 @@
 package me.hicupalot.sqaisheybot.command;
 
 import me.hicupalot.sqaisheybot.Main;
-import me.hicupalot.sqaisheybot.configs.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class CommandForceSync extends DiscordCommand {
@@ -23,23 +22,26 @@ public class CommandForceSync extends DiscordCommand {
     @Override
     public void onCommand(SlashCommandEvent event) {
 
+        if (main.getSQLHandler().getLatestBan() != null) {
+            event.reply("This command can no longer be used!").queue();
+        }
+
         JDA jda = main.getJda();
         List<User> bans = new ArrayList<>();
 
-        jda.getGuildById(Config.QUACKTOPIA).retrieveBanList().queue(bansList -> {
+        jda.getGuildById(main.getConfig().getQuacktopiaDiscord()).retrieveBanList().queue(bansList -> {
             bansList.forEach(b -> {
                 bans.add(b.getUser());
             });
         });
-        Iterator<User> it = bans.iterator();
-        jda.getGuildById(Config.SQAISHEY_DISCORD).ban(it.next(),7).queue();
 
-        while(it.hasNext()) {
-            jda.getGuildById(Config.SQAISHEY_DISCORD).ban(it.next(), 7).queue();
+        for (User user : bans) {
+            jda.getGuildById(main.getConfig().getSqaisheyDiscord()).ban(user, 0).queue();
+            main.getSQLHandler().insertBan(user.getId(), new Timestamp(System.currentTimeMillis()));
         }
 
-        event.reply("Successfully banned "+ bans.toArray().length+ " users").setEphemeral(true).queue();
-        jda.getTextChannelById(Config.SQAISHEY_DISCORD_LOG).sendMessage("Successfully synced! "+ bans.toArray().length+ " users were banned").queue();
+        event.reply("Successfully banned "+ bans.size() + " users").setEphemeral(true).queue();
+        jda.getTextChannelById(main.getConfig().getSqaisheyDiscordLog()).sendMessage("Successfully synced! "+ bans.size() + " users were banned").queue();
 
     }
 

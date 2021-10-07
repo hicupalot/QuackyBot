@@ -14,6 +14,7 @@ public class SQLHandler {
         hikariDataSource.setUsername(username);
         hikariDataSource.setPassword(password);
         hikariDataSource.setJdbcUrl("jdbc:mysql://localhost:" + port + "/" + database);
+        hikariDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         setupTables();
 
     }
@@ -23,7 +24,7 @@ public class SQLHandler {
             Connection connection = hikariDataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS Bans (" +
-                            "discord_id int(20)," +
+                            "discord_id varchar(100) PRIMARY KEY," +
                             "banned_at timestamp" +
                             ");"
             );
@@ -80,9 +81,23 @@ public class SQLHandler {
     public void insertBan(String id, Timestamp timestamp) {
         try {
             Connection connection = hikariDataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Bans (discord_ui, banned_at) VALUES (?, ?);");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Bans (discord_id, banned_at) VALUES (?, ?);");
             preparedStatement.setString(1, id);
             preparedStatement.setTimestamp(2, timestamp);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteBan(String id) {
+        try {
+            Connection connection = hikariDataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Bans WHERE discord_id = ?;");
+            preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
