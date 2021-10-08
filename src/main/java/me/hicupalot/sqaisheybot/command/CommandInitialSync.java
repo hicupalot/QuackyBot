@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandForceSync extends DiscordCommand {
+public class CommandInitialSync extends DiscordCommand {
 
-    public CommandForceSync(Main main) {
+    public CommandInitialSync(Main main) {
 
-        super(main, "forcesync", Permission.ADMINISTRATOR);
+        super(main, "initialsync", Permission.ADMINISTRATOR);
 
     }
 
@@ -33,21 +33,23 @@ public class CommandForceSync extends DiscordCommand {
             bansList.forEach(b -> {
                 bans.add(b.getUser());
             });
+
+            for (User user : bans) {
+                jda.getGuildById(main.getConfig().getSqaisheyDiscord()).ban(user, 0).queue();
+                main.getSQLHandler().insertBan(user.getId(), new Timestamp(System.currentTimeMillis()));
+            }
+
+            event.reply("Successfully banned "+ bans.size() + " users").setEphemeral(true).queue();
+            jda.getTextChannelById(main.getConfig().getSqaisheyDiscordLog()).sendMessage("Successfully synced! "+ bans.size() + " users were banned").queue();
+
+
         });
-
-        for (User user : bans) {
-            jda.getGuildById(main.getConfig().getSqaisheyDiscord()).ban(user, 0).queue();
-            main.getSQLHandler().insertBan(user.getId(), new Timestamp(System.currentTimeMillis()));
-        }
-
-        event.reply("Successfully banned "+ bans.size() + " users").setEphemeral(true).queue();
-        jda.getTextChannelById(main.getConfig().getSqaisheyDiscordLog()).sendMessage("Successfully synced! "+ bans.size() + " users were banned").queue();
 
     }
 
     @Override
     public CommandData buildCommand() {
-        return new CommandData("forcesync", "Force sync bans");
+        return new CommandData("initialsync", "Force sync bans");
     }
 
 }
