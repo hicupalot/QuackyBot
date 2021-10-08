@@ -36,7 +36,6 @@ public class Main {
         this.config = Config.loadConfig("config.json", Config.class);
 
         this.jda = JDABuilder.createDefault(config.getToken()).setStatus(OnlineStatus.ONLINE)
-                .setActivity(Activity.watching("https://www.youtube.com/sqaishey"))
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_WEBHOOKS)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableCache(CacheFlag.ACTIVITY)
