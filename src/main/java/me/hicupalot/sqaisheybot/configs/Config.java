@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 import java.io.*;
+import java.util.List;
 
 public class Config {
 
@@ -16,8 +17,10 @@ public class Config {
     private final String sqlPassword;
     private final String sqlDatabase;
     private final Integer sqlPort;
+    private final List<String> Helpers;
 
-    public Config(String token, String sqaisheyDiscord, String quacktopiaDiscord, String sqaisheyDiscordLog, String quacktopiaDiscordLog, String sqlUsername, String sqlPassword, String sqlDatabase, Integer sqlPort) {
+    public Config(String token, String sqaisheyDiscord, String quacktopiaDiscord, String sqaisheyDiscordLog, String quacktopiaDiscordLog, String sqlUsername, String sqlPassword, String sqlDatabase, Integer sqlPort,
+                  List<String> Helpers) {
 
         this.token = token;
         this.sqaisheyDiscord = sqaisheyDiscord;
@@ -28,6 +31,7 @@ public class Config {
         this.sqlPassword = sqlPassword;
         this.sqlDatabase = sqlDatabase;
         this.sqlPort = sqlPort;
+        this.Helpers=Helpers;
 
     }
 
@@ -100,6 +104,9 @@ public class Config {
 
     public Integer getSqlPort() {
         return sqlPort;
+    }
+    public List<String> getHelpers(){
+        return Helpers;
     }
 
 }

@@ -1,3 +1,7 @@
 # Project exclude paths
 /target/
 /src/main/resources/.env
+/config.json
+/SqaisheyBot.iml
+/.idea/uiDesigner.xml
+!/.idea/

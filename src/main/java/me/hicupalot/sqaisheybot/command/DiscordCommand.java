@@ -16,7 +16,6 @@ public abstract class DiscordCommand {
         this.main = main;
         this.name = name;
         this.permission = permission;
-
     }
 
     public abstract void onCommand(SlashCommandEvent event);
