@@ -27,18 +27,28 @@ public class ChannelUnban extends DiscordCommand {
         String user1 = event.getOption("user").getAsUser().getId(); //User Being Unbanned
         String channel = event.getOption("channel").getAsGuildChannel().getId();
         assert user != null;
+        assert guild !=null;
         //-------------------------------------------------------------------------------------------//
-        if (user.isOwner() || user.hasPermission(Permission.BAN_MEMBERS)) {
-            event.reply("You can't unban a Moderator!").setEphemeral(true).queue(); //There were so many errors if I didn't add a catch HELP
-            return;
-        }
+        if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
+            if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("298178020806492161")).findAny().orElse(null) == null || user.isOwner()
+                    || user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("759818242726035466")).findAny().orElse(null) == null || user.hasPermission(Permission.ADMINISTRATOR)){
+                event.reply("You can't unban a Moderator!").setEphemeral(true).queue();
+            }
+            else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
+                if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("894564336599711774")).findAny().orElse(null) == null || user.isOwner() || user.hasPermission(Permission.ADMINISTRATOR)){
+                    event.reply("You can't unban a Moderator!").setEphemeral(true).queue();
+                    return;
+                 }
+
+             }
+         }
         //-------------------------------------------------------------------------------------------//
         jda.getTextChannelById(channel).getPermissionOverride(user).delete().queue();
         event.reply("You successfully unbanned" + user + " from " + channel + " for " + event.getOption("reason")).setEphemeral(true).queue();
-        if (event.getGuild().getId().equals(main.getConfig().getQuacktopiaDiscord())) {
+        if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
             jda.getTextChannelById(main.getConfig().getQuacktopiaDiscordLog()).sendMessage(moderator + " unbanned " + user + " from " + channel + " for " + event.getOption("reason")).queue();
         }
-        else if (event.getGuild().getId().equals(main.getConfig().getSqaisheyDiscord())) {
+        else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
             jda.getTextChannelById(main.getConfig().getSqaisheyDiscordLog()).sendMessage(moderator + " unbanned " + user + " from " + channel + " for " + event.getOption("reason")).queue();
         }
     }

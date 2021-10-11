@@ -25,6 +25,7 @@ public class CommandManager extends ListenerAdapter {
         commands.add(new CommandInitialSync(main));
         commands.add(new ChannelBan(main));
         commands.add(new ChannelUnban(main));
+        commands.add(new checkban(main));
 
         CommandListUpdateAction quacktopiaCommandUpdateAction = main.getJda().getGuildById(main.getConfig().getQuacktopiaDiscord()).updateCommands();
         CommandListUpdateAction sqaisheyCommandUpdateAction = main.getJda().getGuildById(main.getConfig().getSqaisheyDiscord()).updateCommands();

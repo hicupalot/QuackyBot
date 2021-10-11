@@ -27,9 +27,18 @@ public class ChannelBan extends DiscordCommand {
         String user1 = event.getOption("user").getAsUser().getId(); //User To Ban
         String channel = event.getOption("channel").getAsGuildChannel().getId();
         assert user != null;
-        if (user.isOwner() || user.hasPermission(Permission.BAN_MEMBERS)){
-            event.reply("You can't ban a Moderator!").setEphemeral(true).queue();
-            return;
+        assert guild !=null;
+        if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
+            if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("298178020806492161")).findAny().orElse(null) == null || user.isOwner()
+            || user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("759818242726035466")).findAny().orElse(null) == null || user.hasPermission(Permission.ADMINISTRATOR)){
+                event.reply("You can't ban a Moderator!").setEphemeral(true).queue();
+            }
+             else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
+                if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("894564336599711774")).findAny().orElse(null) == null || user.isOwner() || user.hasPermission(Permission.ADMINISTRATOR)){
+                    event.reply("You can't ban a Moderator!").setEphemeral(true).queue();
+                    return;
+                }
+            }
         }
         if (Objects.requireNonNull(jda.getTextChannelById(channel).getPermissionOverride(user)).isMemberOverride()) {
             jda.getTextChannelById(channel).putPermissionOverride(user).setDeny(Permission.VIEW_CHANNEL).queue();
@@ -37,10 +46,10 @@ public class ChannelBan extends DiscordCommand {
             jda.getTextChannelById(channel).createPermissionOverride(user).setDeny(Permission.VIEW_CHANNEL).queue();
         }
         event.reply("You successfully banned" + user + " from " + channel + " for " + event.getOption("reason")).setEphemeral(true).queue();
-        if (event.getGuild().getId().equals(main.getConfig().getQuacktopiaDiscord())) {
+        if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
             jda.getTextChannelById(main.getConfig().getQuacktopiaDiscordLog()).sendMessage(moderator + " banned " + user + " from " + channel + " for " + event.getOption("reason")).queue();
         }
-            else if (event.getGuild().getId().equals(main.getConfig().getSqaisheyDiscord())) {
+            else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
             jda.getTextChannelById(main.getConfig().getSqaisheyDiscordLog()).sendMessage(moderator + " banned " + user + " from " + channel + " for " + event.getOption("reason")).queue();
         }
     }
