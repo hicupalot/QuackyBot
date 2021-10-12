@@ -25,31 +25,36 @@ public class ChannelUnban extends DiscordCommand {
         Guild guild = event.getGuild(); //Guild it Occured in
         Member user = event.getOption("user").getAsMember(); //User being Unbanned
         String user1 = event.getOption("user").getAsUser().getId(); //User Being Unbanned
+        User user2 = event.getOption("user").getAsUser(); //User as user
         String channel = event.getOption("channel").getAsGuildChannel().getId(); //Channel ID
         assert user != null;
         assert guild != null;
         //-------------------------------------------------------------------------------------------//
-        if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
-            if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("298178020806492161")).findAny().orElse(null) != null || user.isOwner()
-                    || user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("759818242726035466")).findAny().orElse(null) != null || user.hasPermission(Permission.ADMINISTRATOR)){
-                event.reply("You can't unban a Moderator!").setEphemeral(true).queue();
+        if (user.getRoles().stream().filter(role -> role.getName().equalsIgnoreCase("Helper")).findAny().orElse(null) != null || user.isOwner()
+                || user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("disc-admin")).findAny().orElse(null) != null || user.hasPermission(Permission.ADMINISTRATOR) || user2.isBot()) {
+            event.reply("You can't check a Moderator!").setEphemeral(true).queue();
+        } else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
+            if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("\uD83D\uDC23 | Helper")).findAny().orElse(null) != null || user.isOwner() || user.hasPermission(Permission.ADMINISTRATOR) || user2.isBot()) {
+                event.reply("You can't check a Moderator!").setEphemeral(true).queue();
                 return;
-            }
-            else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
-                if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("894564336599711774")).findAny().orElse(null) != null || user.isOwner() || user.hasPermission(Permission.ADMINISTRATOR)){
-                    event.reply("You can't unban a Moderator!").setEphemeral(true).queue();
-                    return;
-                }
-
             }
         }
         //-------------------------------------------------------------------------------------------//
-        if (jda.getTextChannelById(channel).getPermissionOverrides().isEmpty() || jda.getTextChannelById(channel).getPermissionOverrides().contains(user)){
-            event.reply("They aren't channel banned they just either don't have access to this channel OR aren't banned!").setEphemeral(true).queue();
+
+        if (jda.getTextChannelById(channel).getMembers().contains(user)) {
+            event.reply("They are already unbanned!").setEphemeral(true).queue();
+            return;
+        }
+        if (jda.getTextChannelById(channel).getPermissionOverrides().isEmpty() && !jda.getTextChannelById(channel).getPermissionOverrides().contains(user)){
+            event.reply("They aren't channel banned they just don't have access to this channel!").setEphemeral(true).queue();
+            return;
+        }
+        if (jda.getTextChannelById(channel).getMembers().contains(user)){
+            event.reply("They are already unbanned!").setEphemeral(true).queue();
             return;
         }
         jda.getTextChannelById(channel).getPermissionOverride(user).delete().queue();
-        event.reply("You successfully unbanned " + user.getAsMention() + " from " + event.getOption("channel").getAsMessageChannel().getName() + " for " + event.getOption("reason").getAsString()).setEphemeral(true).queue();
+        event.reply("You successfully unbanned " + user.getAsMention() + " from " + event.getOption("channel").getAsGuildChannel().getAsMention() + " for " + event.getOption("reason").getAsString()).setEphemeral(true).queue();
         if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
             jda.getTextChannelById(main.getConfig().getQuacktopiaDiscordLog()).sendMessage(moderator.getAsMention() + " unbanned " + user.getAsMention() + " from " + event.getOption("channel").getAsGuildChannel().getAsMention() + " for " + event.getOption("reason").getAsString()).queue();
         }
