@@ -25,7 +25,7 @@ public class ChannelBan extends DiscordCommand {
         Guild guild = event.getGuild(); //Guild it Occured In
         Member user = event.getOption("user").getAsMember(); //User To Ban
         String user1 = event.getOption("user").getAsUser().getId(); //User To Ban
-        String channel = event.getOption("channel").getAsGuildChannel().getId();
+        String channel = event.getOption("channel").getAsGuildChannel().getId(); //Channel ID
         assert user != null;
         assert guild != null;
 
@@ -37,6 +37,10 @@ public class ChannelBan extends DiscordCommand {
             } else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
                 if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("894564336599711774")).findAny().orElse(null) != null || user.isOwner() || user.hasPermission(Permission.ADMINISTRATOR)) {
                     event.reply("You can't ban a Moderator!").setEphemeral(true).queue();
+                    return;
+                }
+                if (jda.getTextChannelById(channel).getPermissionOverrides().isEmpty() || !jda.getTextChannelById(channel).getPermissionOverrides().contains(user)) {
+                    event.reply("They aren't channel banned they just cannot view this channel!").setEphemeral(true).queue();
                     return;
                 }
             }

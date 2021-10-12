@@ -24,7 +24,7 @@ public class checkban extends DiscordCommand {
         Guild guild = event.getGuild(); //Guild it Occured in
         Member user = event.getOption("user").getAsMember(); //User being Checked
         String user1 = event.getOption("user").getAsUser().getId(); //User Being Checked
-        String channel = event.getOption("channel").getAsGuildChannel().getId();
+        String channel = event.getOption("channel").getAsGuildChannel().getId(); //Channel ID
         assert user != null;
         assert guild != null;
         if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {

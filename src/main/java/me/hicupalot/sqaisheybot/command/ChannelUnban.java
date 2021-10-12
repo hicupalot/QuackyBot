@@ -25,7 +25,7 @@ public class ChannelUnban extends DiscordCommand {
         Guild guild = event.getGuild(); //Guild it Occured in
         Member user = event.getOption("user").getAsMember(); //User being Unbanned
         String user1 = event.getOption("user").getAsUser().getId(); //User Being Unbanned
-        String channel = event.getOption("channel").getAsGuildChannel().getId();
+        String channel = event.getOption("channel").getAsGuildChannel().getId(); //Channel ID
         assert user != null;
         assert guild != null;
         //-------------------------------------------------------------------------------------------//
@@ -45,7 +45,7 @@ public class ChannelUnban extends DiscordCommand {
         }
         //-------------------------------------------------------------------------------------------//
         if (jda.getTextChannelById(channel).getPermissionOverrides().isEmpty() || jda.getTextChannelById(channel).getPermissionOverrides().contains(user)){
-            event.reply("They aren't channel banned they just don't have access to this channel!").setEphemeral(true).queue();
+            event.reply("They aren't channel banned they just either don't have access to this channel OR aren't banned!").setEphemeral(true).queue();
             return;
         }
         jda.getTextChannelById(channel).getPermissionOverride(user).delete().queue();
