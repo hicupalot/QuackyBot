@@ -32,10 +32,10 @@ public class ChannelUnban extends DiscordCommand {
         //-------------------------------------------------------------------------------------------//
         if (user.getRoles().stream().filter(role -> role.getName().equalsIgnoreCase("Helper")).findAny().orElse(null) != null || user.isOwner()
                 || user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("disc-admin")).findAny().orElse(null) != null || user.hasPermission(Permission.ADMINISTRATOR) || user2.isBot()) {
-            event.reply("You can't check a Moderator!").setEphemeral(true).queue();
+            event.reply("You can't check this user!").setEphemeral(true).queue();
         } else if (guild.getId().equals(main.getConfig().getSqaisheyDiscord())) {
             if (user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("\uD83D\uDC23 | Helper")).findAny().orElse(null) != null || user.isOwner() || user.hasPermission(Permission.ADMINISTRATOR) || user2.isBot()) {
-                event.reply("You can't check a Moderator!").setEphemeral(true).queue();
+                event.reply("You can't check this user!").setEphemeral(true).queue();
                 return;
             }
         }
