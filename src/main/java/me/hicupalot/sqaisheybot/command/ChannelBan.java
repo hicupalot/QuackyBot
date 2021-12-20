@@ -29,7 +29,10 @@ public class ChannelBan extends DiscordCommand {
         String channel = event.getOption("channel").getAsGuildChannel().getId(); //Channel ID
         assert user != null;
         assert guild != null;
-
+        if (!event.getOption("channel").getChannelType().isMessage()){
+            event.reply("You must choose a TEXT CHANNEL").setEphemeral(true).queue();
+            return;
+        }
         if (guild.getId().equals(main.getConfig().getQuacktopiaDiscord())) {
             if (user.getRoles().stream().filter(role -> role.getName().equalsIgnoreCase("Helper")).findAny().orElse(null) != null || user.isOwner()
                     || user.getRoles().stream().filter(role -> role.getId().equalsIgnoreCase("disc-admin")).findAny().orElse(null) != null || user.hasPermission(Permission.ADMINISTRATOR) || user2.isBot()) {
@@ -39,7 +42,7 @@ public class ChannelBan extends DiscordCommand {
                     event.reply("You can't check this user!").setEphemeral(true).queue();
                     return;
                 }
-                if (!jda.getTextChannelById(channel).getPermissionOverrides().contains(user) && !jda.getTextChannelById(channel).getMembers().contains(user)){
+                 if (!jda.getTextChannelById(channel).getPermissionOverrides().contains(user) && !jda.getTextChannelById(channel).getMembers().contains(user)){
                     event.reply("They already cannot see this channel due to role restrictions!").setEphemeral(true).queue();
                     return;
                 }
